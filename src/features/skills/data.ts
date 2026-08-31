@@ -13,7 +13,7 @@ export const skillCategories: SkillCategory[] = [
   {
     id: 'core',
     label: 'Core stack',
-    skills: ['TypeScript', 'React', 'Vite', 'Tailwind CSS'],
+    skills: ['TypeScript', 'React', 'Vite', 'Tailwind CSS', 'Three.js'],
     placeholder: false,
   },
   {

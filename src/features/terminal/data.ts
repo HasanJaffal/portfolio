@@ -19,6 +19,7 @@ export const coreCommands: CommandHelp[] = [
   { name: 'resume', description: 'open resume.pdf' },
   { name: 'ls', description: 'list sections' },
   { name: 'pwd', description: 'print current path' },
+  { name: 'sound', description: 'toggle interface sound (on|off)' },
   { name: 'clear', description: 'clear the terminal' },
 ]
 

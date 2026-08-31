@@ -19,7 +19,7 @@ export const ProjectCard = forwardRef<HTMLDivElement, { project: Project; highli
         ref={ref}
         id={project.slug}
         className={cn(
-          'flex flex-col rounded-lg border border-border bg-panel p-5 transition-colors duration-300 scroll-mt-20',
+          'flex flex-col rounded-lg border border-border bg-panel/80 p-5 transition-colors duration-300 scroll-mt-20',
           highlighted && 'border-lime/60',
         )}
       >

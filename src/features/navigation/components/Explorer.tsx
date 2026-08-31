@@ -1,9 +1,11 @@
 import { NavLink } from 'react-router-dom'
+import { motion } from 'motion/react'
 import { Terminal, User, Briefcase, FolderGit2, Cpu, Mail, Download, Command } from 'lucide-react'
 import { navItems, type NavIcon } from '@/features/navigation/data'
 import { resume } from '@/features/resume/data'
 import { useWorkspace } from '@/layout/workspace-context'
 import { cn } from '@/lib/utils'
+import { easeOut } from '@/lib/motion'
 
 const iconMap: Record<NavIcon, typeof Terminal> = {
   terminal: Terminal,
@@ -36,16 +38,29 @@ export function Explorer({ onNavigate }: { onNavigate?: () => void }) {
               onClick={onNavigate}
               className={({ isActive }) =>
                 cn(
-                  'group flex items-center gap-2.5 rounded-md border-l-2 border-transparent px-2.5 py-2 text-sm text-muted transition-colors duration-100 hover:bg-panel-hover hover:text-foreground',
-                  isActive && 'border-lime bg-lime/10 text-lime-soft hover:text-lime-soft',
+                  'group relative flex items-center gap-2.5 rounded-md px-2.5 py-2 text-sm text-muted transition-colors duration-100 hover:bg-panel-hover hover:text-foreground',
+                  isActive && 'text-lime-soft hover:text-lime-soft',
                 )
               }
             >
-              <Icon className="h-4 w-4 shrink-0" aria-hidden="true" />
-              <span className="flex-1 truncate">{item.label}</span>
-              <span className="hidden truncate font-mono text-[11px] text-muted-dim group-hover:text-muted lg:inline">
-                {item.fileLabel}
-              </span>
+              {({ isActive }) => (
+                <>
+                  {/* One indicator for the whole list: Motion slides it
+                      between sections instead of cross-fading two borders. */}
+                  {isActive && (
+                    <motion.span
+                      layoutId="explorer-active"
+                      transition={{ duration: 0.24, ease: easeOut }}
+                      className="absolute inset-0 -z-10 rounded-md border-l-2 border-lime bg-lime/10"
+                    />
+                  )}
+                  <Icon className="h-4 w-4 shrink-0" aria-hidden="true" />
+                  <span className="flex-1 truncate">{item.label}</span>
+                  <span className="hidden truncate font-mono text-[11px] text-muted-dim group-hover:text-muted lg:inline">
+                    {item.fileLabel}
+                  </span>
+                </>
+              )}
             </NavLink>
           )
         })}

@@ -33,6 +33,7 @@
 
   --animate-caret-blink: caret-blink 1.1s ease-in-out infinite;
   --animate-fade-in: fade-in 0.2s ease-out;
+  --animate-signal: signal 2.4s ease-in-out infinite;
 
   @keyframes caret-blink {
     0%,
@@ -53,6 +54,17 @@
       opacity: 0;
     }
     to {
+      opacity: 1;
+    }
+  }
+
+  /* The slow pulse on the status-bar wildlife indicator. */
+  @keyframes signal {
+    0%,
+    100% {
+      opacity: 0.35;
+    }
+    50% {
       opacity: 1;
     }
   }
@@ -83,6 +95,44 @@
     linear-gradient(to right, color-mix(in oklab, var(--color-border) 45%, transparent) 1px, transparent 1px),
     linear-gradient(to bottom, color-mix(in oklab, var(--color-border) 45%, transparent) 1px, transparent 1px);
   background-size: 28px 28px;
+}
+
+/* CRT line structure over the boot overlay. Purely decorative. */
+@utility scanlines {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    color-mix(in oklab, var(--color-lime) 4%, transparent) 0px,
+    color-mix(in oklab, var(--color-lime) 4%, transparent) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+}
+
+/* The ground the portfolio content sits on. Nearly solid under the centre
+   column where the text lives, and progressively clearer toward the edges,
+   so the 3D environment is visible in the margins without ever competing
+   with anything you have to read. */
+@utility bg-viewport {
+  background: radial-gradient(
+    105% 80% at 50% 42%,
+    color-mix(in oklab, var(--color-background) 78%, transparent) 0%,
+    color-mix(in oklab, var(--color-background) 70%, transparent) 45%,
+    color-mix(in oklab, var(--color-background) 18%, transparent) 100%
+  );
+}
+
+/* Vignette used by the no-WebGL backdrop, so the static grid still has depth. */
+@utility bg-radial-fade {
+  background: radial-gradient(
+    115% 85% at 50% 42%,
+    transparent 0%,
+    color-mix(in oklab, var(--color-inset) 88%, transparent) 100%
+  );
+}
+
+/* Phosphor bloom. Used sparingly — the boot prompt and the live indicator. */
+@utility text-glow {
+  text-shadow: 0 0 14px color-mix(in oklab, var(--color-lime) 40%, transparent);
 }
 
 @layer base {

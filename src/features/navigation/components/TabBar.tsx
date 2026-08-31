@@ -1,8 +1,10 @@
 import { useState, type MouseEvent } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
+import { AnimatePresence, motion } from 'motion/react'
 import { X } from 'lucide-react'
 import { navItems } from '@/features/navigation/data'
 import { cn } from '@/lib/utils'
+import { easeOut, transitions } from '@/lib/motion'
 
 interface Tab {
   path: string
@@ -48,24 +50,35 @@ export function TabBar() {
   }
 
   return (
-    <div className="scrollbar-thin hidden shrink-0 overflow-x-auto border-b border-border bg-background lg:flex">
+    <div className="scrollbar-thin relative z-10 hidden shrink-0 overflow-x-auto border-b border-border bg-background lg:flex">
+      <AnimatePresence initial={false}>
       {tabs.map((tab) => {
         const isActive = tab.path === location.pathname
         return (
-          <a
+          <motion.a
             key={tab.path}
             href={tab.path}
+            layout
+            initial={{ opacity: 0, width: 0 }}
+            animate={{ opacity: 1, width: 'auto' }}
+            exit={{ opacity: 0, width: 0 }}
+            transition={transitions.fast}
             onClick={(e) => {
               e.preventDefault()
               navigate(tab.path)
             }}
             className={cn(
-              'group flex shrink-0 items-center gap-2 border-r border-border px-3 py-2 font-mono text-xs text-muted-dim',
-              isActive
-                ? 'border-t-2 border-t-lime bg-panel text-foreground'
-                : 'border-t-2 border-t-transparent hover:bg-panel-hover hover:text-muted',
+              'group relative flex shrink-0 items-center gap-2 overflow-hidden border-r border-border px-3 py-2 font-mono text-xs text-muted-dim',
+              isActive ? 'bg-panel text-foreground' : 'hover:bg-panel-hover hover:text-muted',
             )}
           >
+            {isActive && (
+              <motion.span
+                layoutId="tab-active"
+                transition={{ duration: 0.24, ease: easeOut }}
+                className="absolute inset-x-0 top-0 h-0.5 bg-lime"
+              />
+            )}
             {tab.label}
             <button
               type="button"
@@ -75,9 +88,10 @@ export function TabBar() {
             >
               <X className="h-3 w-3" />
             </button>
-          </a>
+          </motion.a>
         )
       })}
+      </AnimatePresence>
     </div>
   )
 }

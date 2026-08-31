@@ -19,6 +19,7 @@ import {
   Search,
 } from 'lucide-react'
 import { useWorkspace } from '@/layout/workspace-context'
+import { useSound } from '@/features/audio'
 import { navigatePaletteItems, projectPaletteItems, actionPaletteItems, type PaletteItem, type PaletteIcon } from '@/features/command-palette/data'
 import { Kbd } from '@/components/ui/kbd'
 
@@ -45,6 +46,7 @@ const groups: { id: PaletteItem['group']; label: string; items: PaletteItem[] }[
 
 export function CommandPalette() {
   const { isPaletteOpen, setPaletteOpen, toggleTerminal, replayBoot } = useWorkspace()
+  const { play } = useSound()
   const navigate = useNavigate()
   const [copiedId, setCopiedId] = useState<string | null>(null)
 
@@ -56,10 +58,12 @@ export function CommandPalette() {
         setPaletteOpen(false)
         break
       case 'external':
+        play('select')
         window.open(item.action.href, '_blank', 'noopener,noreferrer')
         setPaletteOpen(false)
         break
       case 'copy':
+        play('select')
         void navigator.clipboard
           .writeText(item.action.value)
           .then(() => {

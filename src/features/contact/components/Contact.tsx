@@ -5,6 +5,7 @@ import { contactLinks, type ContactLink } from '@/features/contact/data'
 import { PageHeader } from '@/components/ui/page-header'
 import { TodoTag } from '@/components/ui/todo-tag'
 import { cn } from '@/lib/utils'
+import { fadeUp } from '@/lib/motion'
 
 const iconMap: Record<ContactLink['icon'], typeof Mail> = {
   mail: Mail,
@@ -28,14 +29,15 @@ export function Contact() {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 8 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.25 }}
+      variants={fadeUp}
+      initial="hidden"
+      animate="show"
+      exit="exit"
       className="mx-auto max-w-xl"
     >
       <PageHeader path="~/contact.ts" title="Get in touch" description="Reach out directly, or find me on the platforms below." />
 
-      <div className="divide-y divide-border rounded-lg border border-border bg-panel">
+      <div className="divide-y divide-border rounded-lg border border-border bg-panel/80">
         {contactLinks.map((link) => {
           const Icon = iconMap[link.icon]
           const copied = copiedId === link.id
