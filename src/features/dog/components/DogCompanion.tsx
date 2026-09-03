@@ -21,12 +21,18 @@ import { useMediaQuery, usePrefersReducedMotion } from '@/lib/hooks/use-media-qu
 
 export function DogCompanion() {
   const trackRef = useRef<HTMLDivElement>(null)
-  const { isBooting } = useWorkspace()
+  const { isBooting, isTerminalOpen } = useWorkspace()
   const reduceMotion = usePrefersReducedMotion()
 
   // Coarse pointers have no cursor to follow, so she looks around on her own
   // and reacts to taps instead. Everything else about her is unchanged.
   const hasPointer = useMediaQuery('(hover: hover) and (pointer: fine)')
+
+  // The terminal slides up out of the same footer she stands on, so while it
+  // is open she is either hidden behind it or crowding the prompt. She steps
+  // off — faded out and frozen mid-stride rather than unmounted, so she comes
+  // back exactly where she left off instead of respawning.
+  const onStage = !isBooting && !isTerminalOpen
 
   return (
     <div
@@ -36,7 +42,8 @@ export function DogCompanion() {
     >
       <Dog
         trackRef={trackRef}
-        active={!isBooting}
+        active={onStage}
+        visible={onStage}
         reduceMotion={reduceMotion}
         hasPointer={hasPointer}
       />

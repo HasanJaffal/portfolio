@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import { motion } from 'motion/react'
 import type { RefObject } from 'react'
 import { useSound } from '@/features/audio'
@@ -23,12 +23,17 @@ import { transitions } from '@/lib/motion'
 interface DogProps {
   trackRef: RefObject<HTMLDivElement | null>
   active: boolean
+  /** False takes her off the stage: faded out, frozen, and out of the tab order. */
+  visible: boolean
   reduceMotion: boolean
   hasPointer: boolean
 }
 
-export function Dog({ trackRef, active, reduceMotion, hasPointer }: DogProps) {
+export function Dog({ trackRef, active, visible, reduceMotion, hasPointer }: DogProps) {
   const { play } = useSound()
+
+  // Flipped by the first completed fade, so only the opening beat is delayed.
+  const [entered, setEntered] = useState(false)
 
   const root = useRef<HTMLDivElement>(null)
   const surface = useRef<HTMLCanvasElement>(null)
@@ -46,9 +51,19 @@ export function Dog({ trackRef, active, reduceMotion, hasPointer }: DogProps) {
   return (
     <motion.div
       ref={root}
+      // `inert` rather than an unmount: everything she knows about where she
+      // is and what she was doing lives in a ref inside the brain, so tearing
+      // her down to hide her would cost her the walk she was halfway through.
+      inert={!visible}
       initial={reduceMotion ? false : { opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ ...transitions.slow, delay: 0.6 }}
+      animate={{ opacity: visible ? 1 : 0 }}
+      // Only her *first* appearance hangs back for the workspace to settle.
+      // Stepping aside for the terminal — and back afterwards — has to keep
+      // pace with the panel, so those runs drop the delay.
+      transition={
+        visible ? { ...transitions.slow, delay: entered ? 0 : 0.6 } : transitions.fast
+      }
+      onAnimationComplete={() => setEntered(true)}
       className="absolute left-0 will-change-transform"
       style={{ width: canvas.width, height: canvas.height, bottom: canvas.float }}
     >
