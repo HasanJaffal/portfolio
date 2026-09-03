@@ -47,13 +47,29 @@ Built as a static site and served from Cloudflare Workers. Every push to
 `master` runs `.github/workflows/deploy.yml`, which lints, typechecks, builds
 and then deploys. Nothing needs to be run by hand.
 
-The workflow needs two repository secrets (Settings → Secrets and variables →
-Actions):
+The workflow needs two credentials. These are **GitHub Actions secrets** — they
+are what lets the runner authenticate *to* Cloudflare. They are not Worker
+variables and must not be added in the Cloudflare dashboard: this Worker serves
+static assets and nothing else, so Cloudflare will refuse them outright with
+"Variables cannot be added to a Worker that only has static assets". That
+refusal is correct. The site needs no runtime variables at all.
 
-| Secret | Where it comes from |
+Read each value from Cloudflare, then store it on GitHub:
+
+| Secret | Read the value from (Cloudflare) |
 | --- | --- |
-| `CLOUDFLARE_API_TOKEN` | Cloudflare → My Profile → API Tokens, using the **Edit Cloudflare Workers** template |
-| `CLOUDFLARE_ACCOUNT_ID` | The hex id in any Cloudflare dashboard URL, or the account's Workers overview |
+| `CLOUDFLARE_API_TOKEN` | My Profile → API Tokens → Create Token → **Edit Cloudflare Workers** template |
+| `CLOUDFLARE_ACCOUNT_ID` | The hex id in any dashboard URL, or Workers & Pages → Account details |
+
+Store both on GitHub, at `github.com/HasanJaffal/portfolio` → Settings →
+Secrets and variables → Actions → New repository secret. Or from a terminal,
+which prompts for the value rather than putting it in shell history:
+
+```bash
+gh secret set CLOUDFLARE_API_TOKEN
+gh secret set CLOUDFLARE_ACCOUNT_ID
+gh secret list                       # confirm both are there
+```
 
 To deploy from a laptop instead — the same build, the same config:
 
