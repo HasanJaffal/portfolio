@@ -1,6 +1,5 @@
-// The "Core stack" category is real — it's exactly what this codebase is
-// built with, so it's left unflagged. Every other category is a placeholder:
-// replace the skill lists with your actual stack.
+// `core` drives the badge row on the home page as well as the Skills page,
+// so keep it to the handful of things worth leading with.
 
 export interface SkillCategory {
   id: string
@@ -13,31 +12,58 @@ export const skillCategories: SkillCategory[] = [
   {
     id: 'core',
     label: 'Core stack',
-    skills: ['TypeScript', 'React', 'Vite', 'Tailwind CSS', 'Three.js'],
+    skills: ['C#', '.NET', 'React', 'TypeScript', 'Python', 'PostgreSQL'],
     placeholder: false,
   },
   {
     id: 'languages',
     label: 'Languages',
-    skills: ['Add language', 'Add another language'],
-    placeholder: true,
+    skills: ['C#', 'TypeScript', 'JavaScript', 'Python', 'SQL'],
+    placeholder: false,
   },
   {
     id: 'backend',
     label: 'Backend',
-    skills: ['Add backend technology'],
-    placeholder: true,
+    skills: [
+      '.NET / ASP.NET Core',
+      'Clean Architecture',
+      'CQRS & Mediator',
+      'Microservices',
+      'RabbitMQ',
+      'Background workers',
+      'REST APIs',
+    ],
+    placeholder: false,
+  },
+  {
+    id: 'frontend',
+    label: 'Frontend',
+    skills: ['React', 'TypeScript', 'Redux', 'Material UI', 'Ag-Grid', 'Map visualization'],
+    placeholder: false,
   },
   {
     id: 'databases',
-    label: 'Databases',
-    skills: ['Add database'],
-    placeholder: true,
+    label: 'Data & storage',
+    skills: [
+      'PostgreSQL',
+      'PostGIS',
+      'ETL pipelines',
+      'Vector embeddings & RAG',
+      'Geospatial data modelling',
+      'Schema design for scale',
+    ],
+    placeholder: false,
   },
   {
     id: 'infra',
-    label: 'Infrastructure & tools',
-    skills: ['Add tool'],
-    placeholder: true,
+    label: 'Practices & tools',
+    skills: [
+      'System design',
+      'Agile / SCRUM',
+      'Git',
+      'ML service integration',
+      'Data processing',
+    ],
+    placeholder: false,
   },
 ]

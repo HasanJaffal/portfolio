@@ -33,7 +33,7 @@ function openSection(path: string, label: string, ctx: TerminalContext): Command
 function openExternalLink(id: 'github' | 'linkedin'): CommandResult {
   const link = contactLinks.find((entry) => entry.id === id)
   if (!link || link.placeholder) {
-    return fail(`${id} link not set — edit src/features/contact/data.ts`)
+    return fail(`${id} link not set (edit src/features/contact/data.ts)`)
   }
   window.open(link.href, '_blank', 'noopener,noreferrer')
   return lines(`Opening ${link.label}...`)
@@ -44,7 +44,7 @@ async function copyEmail(): Promise<CommandResult> {
     await navigator.clipboard.writeText(email)
     return lines(`Copied email to clipboard: ${email}`)
   } catch {
-    return lines(`Email: ${email}`, '(clipboard unavailable — copy it manually)')
+    return lines(`Email: ${email}`, '(clipboard unavailable, copy it manually)')
   }
 }
 
@@ -68,7 +68,7 @@ const commands: Record<string, CommandHandler> = {
   contact: (_args, ctx) => openSection('/contact', '/contact', ctx),
   resume: () => {
     if (!resume.available) {
-      return fail('resume.pdf not found — check back soon.')
+      return fail('resume.pdf not found. Check back soon.')
     }
     window.open(resume.url, '_blank', 'noopener,noreferrer')
     return lines('Opening resume.pdf...')

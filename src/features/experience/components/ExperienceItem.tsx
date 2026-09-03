@@ -22,7 +22,7 @@ export function ExperienceItem({ entry, isLast }: { entry: ExperienceEntry; isLa
             {entry.role} <span className="font-normal text-muted">· {entry.company}</span>
           </h3>
           <span className="shrink-0 font-mono text-xs text-muted-dim">
-            {entry.start} — {entry.end}
+            {entry.start} to {entry.end}
           </span>
         </div>
         <p className="mt-1 font-mono text-xs text-muted-dim">{entry.location}</p>

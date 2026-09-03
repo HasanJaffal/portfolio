@@ -1,6 +1,5 @@
-// Replace these placeholder projects with your real work. Both the Projects
-// page and the terminal's `projects` command read from this single file —
-// update it once and both surfaces stay in sync.
+// Professional work. Product and client names are withheld, so these are
+// described by what they do and how they were built rather than by brand.
 
 export interface Project {
   id: string
@@ -18,39 +17,64 @@ export interface Project {
 
 export const projects: Project[] = [
   {
-    id: 'project-1',
-    slug: 'project-one',
-    name: 'Add project name',
+    id: 'etl-platform',
+    slug: 'document-geospatial-etl',
+    name: 'Document & Geospatial ETL Platform',
     description:
-      'Add a one- or two-sentence description of what this project does and why it exists.',
-    role: 'Add your role',
+      'An internal platform that turns unstructured documents and raw geospatial files into queryable, structured data. Two pipelines share one backbone: documents go from scraping to transformation to embedding to loading, and geo data arrives in whatever format the source happens to use and leaves in a single canonical structure.',
+    role: 'Lead engineer on the pipeline architecture',
     highlights: [
-      'Add a technical highlight — an architecture decision, a performance win, an interesting problem solved',
+      'Designed the document pipeline end to end: scraping, transformation, embedding, and loading into vector and relational stores.',
+      'Built a geo ingestion layer that accepts many input formats and normalizes them into one concrete schema, rather than one importer per format.',
+      'Used AI for the parts that resist rules, normalizing inconsistent values and mapping unknown source fields onto the target schema.',
+      'Split the work across microservices coordinated over RabbitMQ, with background workers so long ingestion jobs never block a request.',
+      'Added validation and fault tolerance at each stage so a single malformed source file fails loudly and in isolation instead of poisoning a batch.',
+      'Tuned PostgreSQL and PostGIS for high-volume inserts on large geospatial datasets.',
     ],
-    tech: ['Add tech'],
+    tech: [
+      '.NET',
+      'C#',
+      'Python',
+      'RabbitMQ',
+      'PostgreSQL',
+      'PostGIS',
+      'Vector embeddings',
+      'Microservices',
+    ],
     status: 'active',
-    placeholder: true,
+    placeholder: false,
   },
   {
-    id: 'project-2',
-    slug: 'project-two',
-    name: 'Add project name',
-    description: 'Add a one- or two-sentence description of this project.',
-    role: 'Add your role',
-    highlights: ['Add a technical highlight'],
-    tech: ['Add tech'],
+    id: 'rag-mapping-platform',
+    slug: 'rag-chat-mapping-platform',
+    name: 'RAG Chat & Interactive Mapping Platform',
+    description:
+      'A domain-specific platform where users ask questions in natural language and get answers grounded in a private document corpus, alongside interactive maps that render the spatial side of the same data.',
+    role: 'Full-stack engineer',
+    highlights: [
+      'Built retrieval-augmented generation over a private corpus so answers stay grounded in in-house documents.',
+      'Implemented the interactive map layer and wired it to the same underlying geospatial data the chat draws on.',
+      'Integrated the backend with external ML services for embedding and retrieval.',
+      'Built the frontend in React and TypeScript against .NET APIs.',
+    ],
+    tech: ['React', 'TypeScript', '.NET', 'C#', 'Python', 'RAG', 'PostGIS', 'Map visualization'],
     status: 'active',
-    placeholder: true,
+    placeholder: false,
   },
   {
-    id: 'project-3',
-    slug: 'project-three',
-    name: 'Add project name',
-    description: 'Add a one- or two-sentence description of this project.',
-    role: 'Add your role',
-    highlights: ['Add a technical highlight'],
-    tech: ['Add tech'],
-    status: 'archived',
-    placeholder: true,
+    id: 'pm-platform',
+    slug: 'project-management-platform',
+    name: 'Project Management Platform',
+    description:
+      'A project management tool built for a specific industry rather than for general use, which meant modelling the domain properly instead of shipping another generic board with tasks on it.',
+    role: 'Full-stack engineer',
+    highlights: [
+      'Built features across the stack, from database schema and .NET APIs through to the React interface.',
+      'Followed Clean Architecture, applying CQRS and the Mediator pattern to keep read and write paths separate.',
+      'Worked directly against domain requirements to model workflows that generic tooling could not express.',
+    ],
+    tech: ['React', 'TypeScript', '.NET', 'ASP.NET Core', 'C#', 'PostgreSQL', 'CQRS'],
+    status: 'maintained',
+    placeholder: false,
   },
 ]

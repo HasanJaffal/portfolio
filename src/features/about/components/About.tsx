@@ -1,6 +1,6 @@
 import { motion } from 'motion/react'
 import { MapPin, Radio } from 'lucide-react'
-import { profile } from '@/features/about/data'
+import { profile, summaryParagraphs } from '@/features/about/data'
 import { PageHeader } from '@/components/ui/page-header'
 import { TodoTag } from '@/components/ui/todo-tag'
 import { fadeUp } from '@/lib/motion'
@@ -29,6 +29,11 @@ export function About() {
 
       <div className="space-y-4 text-[15px] leading-relaxed text-foreground">
         <p>{profile.summary}</p>
+        {summaryParagraphs.map((paragraph) => (
+          <p key={paragraph} className="text-muted">
+            {paragraph}
+          </p>
+        ))}
       </div>
       {profile.summaryIsPlaceholder && (
         <div className="mt-4">

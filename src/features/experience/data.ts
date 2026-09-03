@@ -1,7 +1,3 @@
-// Replace these placeholder entries with your real work history.
-// Every entry here is marked `placeholder: true` — the UI renders a visible
-// "// TODO" marker on placeholder entries so nothing fabricated reads as fact.
-
 export interface ExperienceEntry {
   id: string
   role: string
@@ -17,30 +13,58 @@ export interface ExperienceEntry {
 
 export const experience: ExperienceEntry[] = [
   {
-    id: 'role-1',
-    role: 'Add role title',
-    company: 'Add company name',
-    location: 'Add location',
-    start: 'Add start date',
+    id: 'aiaec',
+    role: 'Software Engineer',
+    company: 'AIAEC',
+    location: 'Beirut, Lebanon',
+    start: '02.2025',
     end: 'Present',
-    summary: 'Add a one-line summary of scope and impact in this role.',
+    summary:
+      'Full-stack work across internal platforms and client products: .NET services, React frontends, and the data pipelines underneath both.',
     highlights: [
-      'Add a specific technical highlight — a system you built, a problem you solved',
-      'Add another highlight',
+      'Designed and built end-to-end ETL pipelines for documents, covering scraping, transformation, embedding and loading into vector and relational stores.',
+      'Built a geospatial ingestion layer that accepts many input formats and normalizes them into one canonical structure, using AI-assisted mapping for messy sources.',
+      'Owned end-to-end GIS workflows, from data collection through storage, querying and map visualization.',
+      'Built event-driven microservices on RabbitMQ with background workers, validation and fault tolerance.',
+      'Migrated legacy Python services to .NET, introducing Clean Architecture and clear abstraction layers.',
+      'Designed and optimized PostgreSQL and PostGIS schemas for large geospatial datasets and high-volume inserts.',
+      'Applied CQRS and the Mediator pattern to keep read and write paths separate as the domain grew.',
+      'Integrated backend services with external ML systems for retrieval and normalization.',
+      'Run the team SCRUM process, including planning, estimation and delivery.',
+      'Own system design decisions across services, and take on the failures nobody else wants to debug.',
     ],
-    tech: ['Add tech'],
-    placeholder: true,
+    tech: [
+      'C#',
+      '.NET',
+      'ASP.NET Core',
+      'React',
+      'TypeScript',
+      'Python',
+      'PostgreSQL',
+      'PostGIS',
+      'RabbitMQ',
+      'CQRS',
+      'Clean Architecture',
+    ],
+    placeholder: false,
   },
   {
-    id: 'role-2',
-    role: 'Add role title',
-    company: 'Add company name',
-    location: 'Add location',
-    start: 'Add start date',
-    end: 'Add end date',
-    summary: 'Add a one-line summary of scope and impact in this role.',
-    highlights: ['Add a specific technical highlight'],
-    tech: ['Add tech'],
-    placeholder: true,
+    id: 'smartsoft',
+    role: 'Frontend Developer (Internship)',
+    company: 'SmartSoft',
+    location: 'Tyre, Lebanon',
+    start: '06.2023',
+    end: '10.2023',
+    summary:
+      'Five-month internship building the interfaces and data-heavy screens of an ERP product.',
+    highlights: [
+      'Built user-facing interfaces for an ERP product in React and TypeScript.',
+      'Managed global application state with Redux.',
+      'Integrated with an ASP.NET Core backend, working with the API team on contracts.',
+      'Used Ag-Grid to organize, filter and sort large fetched datasets.',
+      'Implemented client-side navigation with React Router and built the UI on Material UI.',
+    ],
+    tech: ['React', 'TypeScript', 'Redux', 'Material UI', 'Ag-Grid', 'React Router', 'Axios'],
+    placeholder: false,
   },
 ]

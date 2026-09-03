@@ -1,6 +1,3 @@
-// The email address is real. GitHub and LinkedIn are left as placeholders —
-// add your real profile URLs and flip `placeholder` to false.
-
 export interface ContactLink {
   id: string
   label: string
@@ -24,17 +21,17 @@ export const contactLinks: ContactLink[] = [
   {
     id: 'github',
     label: 'GitHub',
-    value: 'Add GitHub username',
-    href: '#',
+    value: 'github.com/HasanJaffal',
+    href: 'https://github.com/HasanJaffal',
     icon: 'github',
-    placeholder: true,
+    placeholder: false,
   },
   {
     id: 'linkedin',
     label: 'LinkedIn',
-    value: 'Add LinkedIn profile URL',
-    href: '#',
+    value: 'linkedin.com/in/hasan-jaffal',
+    href: 'https://www.linkedin.com/in/hasan-jaffal/',
     icon: 'linkedin',
-    placeholder: true,
+    placeholder: false,
   },
 ]
