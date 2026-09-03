@@ -1,11 +1,11 @@
 {
   "$schema": "./node_modules/wrangler/config-schema.json",
 
-  // ⚠️ This must match the Worker that already serves hassanjaffal.com. If it
-  // does not, `wrangler deploy` will not update that Worker — it will create a
-  // second one under this name, with no custom domain attached, and the live
-  // site will keep serving the old build while every deploy reports success.
-  // The name is in the Cloudflare dashboard under Workers & Pages.
+  // Must match the Worker that serves hassanjaffal.com — confirmed by the
+  // "Workers Builds: portfolio" check Cloudflare posts on every push. Changing
+  // it does not rename that Worker: a deploy would create a *second* one under
+  // the new name, with no custom domain attached, and report success while the
+  // live site kept serving the old build.
   "name": "portfolio",
 
   "compatibility_date": "2026-09-04",

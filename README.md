@@ -43,46 +43,29 @@ Everything currently ships with those flags set to `false`.
 
 ## Deployment
 
-Built as a static site and served from Cloudflare Workers. Every push to
-`master` runs `.github/workflows/deploy.yml`, which lints, typechecks, builds
-and then deploys. Nothing needs to be run by hand.
+Built as a static site and served from Cloudflare Workers. Deploys are already
+automatic: Cloudflare **Workers Builds** watches this repository, builds on
+every push, and reports back on the commit as a `Workers Builds: portfolio`
+check. There is no GitHub Actions workflow and there are no deploy secrets to
+manage — the connection is configured in the Cloudflare dashboard, under
+Workers & Pages → portfolio → Settings → Builds.
 
-The workflow needs two credentials. These are **GitHub Actions secrets** — they
-are what lets the runner authenticate *to* Cloudflare. They are not Worker
-variables and must not be added in the Cloudflare dashboard: this Worker serves
-static assets and nothing else, so Cloudflare will refuse them outright with
-"Variables cannot be added to a Worker that only has static assets". That
-refusal is correct. The site needs no runtime variables at all.
+Configuration lives in `wrangler.jsonc` rather than in the dashboard, so it is
+reviewable, survives a clean checkout, and is what Workers Builds actually
+reads at build time. The `name` there identifies the Worker serving the domain;
+pointing it elsewhere would not rename that Worker, it would create a second
+one with no custom domain attached.
 
-Read each value from Cloudflare, then store it on GitHub:
-
-| Secret | Read the value from (Cloudflare) |
-| --- | --- |
-| `CLOUDFLARE_API_TOKEN` | My Profile → API Tokens → Create Token → **Edit Cloudflare Workers** template |
-| `CLOUDFLARE_ACCOUNT_ID` | The hex id in any dashboard URL, or Workers & Pages → Account details |
-
-Store both on GitHub, at `github.com/HasanJaffal/portfolio` → Settings →
-Secrets and variables → Actions → New repository secret. Or from a terminal,
-which prompts for the value rather than putting it in shell history:
+To build and deploy by hand, if a Cloudflare build ever needs bypassing:
 
 ```bash
-gh secret set CLOUDFLARE_API_TOKEN
-gh secret set CLOUDFLARE_ACCOUNT_ID
-gh secret list                       # confirm both are there
+npm run deploy                  # build, then wrangler deploy
+npx wrangler deploy --dry-run   # validate wrangler.jsonc, deploy nothing
 ```
 
-To deploy from a laptop instead — the same build, the same config:
-
-```bash
-npm run deploy   # npm run build && wrangler deploy
-```
-
-All Workers configuration lives in `wrangler.jsonc` rather than in the
-dashboard, so it is reviewable and survives a clean checkout. The Worker
-`name` in that file has to match the Worker already serving the domain; point
-it somewhere else and a deploy will quietly create a *second* Worker with no
-custom domain attached, reporting success while the live site keeps serving
-the old build.
+Both need `wrangler login` first. The pinned `wrangler` devDependency is the
+same version Cloudflare runs, so a build that fails up there can be reproduced
+down here.
 
 - Build command: `npm run build`
 - Output directory: `dist`
