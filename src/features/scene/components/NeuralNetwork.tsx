@@ -8,10 +8,6 @@ import { networkLinkDistance, networkMaxDegree, sceneColors } from '@/features/s
  * The environment: a lattice of nodes wired to their neighbours, with signals
  * running along the wires.
  *
- * It is drawn in the same language as the pets — lit vertices joined by thin
- * lines — so an animal that wanders across the page reads as something this
- * network produced rather than as clip art dropped on top of it.
- *
  * Every frame writes straight into the geometry's own attribute buffers. At
  * these counts that is far cheaper than rebuilding geometry, and it costs
  * React nothing: no state changes at all while the scene is running.

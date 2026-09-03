@@ -14,7 +14,7 @@ import { Experience } from '@/features/experience'
 import { Projects } from '@/features/projects'
 import { Skills } from '@/features/skills'
 import { Contact } from '@/features/contact'
-import { PetLayer } from '@/features/pets'
+import { DogCompanion } from '@/features/dog'
 import { easeOut } from '@/lib/motion'
 
 export function Workspace() {
@@ -47,11 +47,12 @@ export function Workspace() {
 
           {/* The window onto the environment. `bg-viewport` keeps the centre
               column settled enough to read on while staying clear at the
-              margins, where the lattice does most of its work. The pets walk
-              along the floor of this same box, so the terminal sliding up
-              pushes them out of its way rather than covering them. */}
-          <div className="relative flex min-h-0 flex-1 flex-col">
-          <main className="scrollbar-thin bg-viewport relative min-h-0 flex-1 overflow-y-auto px-5 py-8 sm:px-8 lg:px-10">
+              margins, where the lattice does most of its work. The extra
+              bottom padding is headroom for the dog, who now walks the
+              footer rather than this box — without it, the last line of a
+              long page would scroll up into the strip she stands in front
+              of. */}
+          <main className="scrollbar-thin bg-viewport relative min-h-0 flex-1 overflow-y-auto px-5 pt-8 pb-24 sm:px-8 lg:px-10">
             <AnimatePresence mode="wait">
               <Routes location={location} key={location.pathname}>
                 <Route path="/" element={<Home />} />
@@ -64,15 +65,21 @@ export function Workspace() {
               </Routes>
             </AnimatePresence>
           </main>
-            <PetLayer />
-          </div>
 
           <AnimatePresence>{isTerminalOpen && <Terminal />}</AnimatePresence>
         </div>
       </div>
 
-      <StatusBar />
-      <MobileNav />
+      {/* The real footer: whichever bar the breakpoint shows keeps this box's
+          height, and the dog is pinned `bottom-full` against it — standing on
+          top of the bar rather than floating in the content above it. That
+          reads as "part of the window's chrome" regardless of the terminal or
+          scroll position, neither of which touch this row. */}
+      <div className="relative shrink-0">
+        <StatusBar />
+        <MobileNav />
+        <DogCompanion />
+      </div>
       <CommandPalette />
     </motion.div>
   )

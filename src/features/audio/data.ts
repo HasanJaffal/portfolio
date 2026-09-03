@@ -21,7 +21,7 @@ export type SoundName =
   | 'toggle'
   | 'boot-line'
   | 'boot-ready'
-  | 'creature'
+  | 'bark'
 
 export interface Voice {
   /** Oscillator shape, or `noise` for a filtered white-noise burst. */
@@ -136,12 +136,15 @@ export const soundSpecs: Record<SoundName, SoundSpec> = {
       { type: 'square', freq: 131, gain: 0.08, attackMs: 1, decayMs: 520, delayMs: 270 },
     ],
   },
-  /* Something moved in the dark: a fast warbling chirp. */
-  creature: {
-    throttleMs: 300,
+  /* The dog. Two clipped downward yaps with a noise transient on the front of
+     each — a bark is mostly attack, and the TIA had exactly this to work with. */
+  bark: {
+    throttleMs: 260,
     voices: [
-      { type: 'square', freq: 880, freqEnd: 1568, steps: 4, gain: 0.12, attackMs: 1, decayMs: 90, jitterCents: 150 },
-      { type: 'square', freq: 1568, freqEnd: 988, steps: 3, gain: 0.1, attackMs: 1, decayMs: 110, delayMs: 100, jitterCents: 150 },
+      { type: 'square', freq: 440, freqEnd: 262, steps: 3, gain: 0.15, attackMs: 1, decayMs: 70, jitterCents: 130 },
+      { type: 'noise', freq: 0, gain: 0.09, attackMs: 1, decayMs: 40, cutoff: 2400 },
+      { type: 'square', freq: 349, freqEnd: 220, steps: 3, gain: 0.12, attackMs: 1, decayMs: 60, delayMs: 145, jitterCents: 130 },
+      { type: 'noise', freq: 0, gain: 0.07, attackMs: 1, decayMs: 34, delayMs: 145, cutoff: 2000 },
     ],
   },
 }

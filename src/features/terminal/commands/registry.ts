@@ -1,7 +1,7 @@
 import { profile } from '@/features/about/data'
 import { contactLinks, email } from '@/features/contact/data'
 import { resume } from '@/features/resume/data'
-import { isPetSpecies, petSpecies, summonPet } from '@/features/pets'
+import { dogCommands, isDogCommand, tellDog } from '@/features/dog'
 import { coreCommands, shortcutCommands } from '@/features/terminal/data'
 
 export interface TerminalContext {
@@ -92,27 +92,37 @@ const commands: Record<string, CommandHandler> = {
     return lines('Replaying boot sequence...')
   },
 
-  /* ---- undocumented: the pets ----------------------------------------- */
+  /* ---- undocumented: the dog ------------------------------------------ */
 
-  zoo: () =>
-    lines(
-      'pets registered on this host:',
-      ...petSpecies.map((species) => `  ${species}`),
-      '',
-      "run 'summon <species>' to call one out. they like being clicked.",
-    ),
-  summon: (args) => {
+  dog: (args) => {
     const requested = args[0]?.toLowerCase()
-    if (requested !== undefined && !isPetSpecies(requested)) {
-      return fail(`unknown species: ${requested}`, "run 'zoo' to list the registered pets")
+    if (requested === undefined) {
+      return lines(
+        'a dog lives on this host.',
+        `usage: dog <${dogCommands.join('|')}>`,
+        '',
+        'she also answers to being clicked.',
+      )
     }
-    summonPet(requested ?? null)
-    return lines(requested ? `calling the ${requested}...` : 'calling whoever is closest...')
+    if (!isDogCommand(requested)) {
+      return fail(`she tilts her head at '${requested}'`, `she knows: ${dogCommands.join(', ')}`)
+    }
+    tellDog(requested)
+    const said: Record<typeof requested, string> = {
+      come: 'here, girl...',
+      sit: 'good girl.',
+      stay: 'staying.',
+      speak: 'woof.',
+      fetch: 'off she goes.',
+      sleep: 'shhh.',
+    }
+    return lines(said[requested])
   },
+  // The classic. She takes it personally.
   cat: (args) => {
     if (args.length === 0) {
-      summonPet('cat')
-      return lines('cat: missing operand', '(one wandered in anyway)')
+      tellDog('speak')
+      return lines('cat: missing operand', '(the dog objects to the request regardless)')
     }
     return fail(`cat: ${args[0]}: No such file or directory`)
   },
