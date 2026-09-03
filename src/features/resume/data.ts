@@ -1,5 +1,3 @@
-// Add resume.pdf to /public, set `available: true`, and update `updatedLabel`.
-
 export interface ResumeInfo {
   available: boolean
   url: string
@@ -7,7 +5,7 @@ export interface ResumeInfo {
 }
 
 export const resume: ResumeInfo = {
-  available: false,
+  available: true,
   url: '/resume.pdf',
-  updatedLabel: 'Add resume.pdf to /public',
+  updatedLabel: 'Updated September 2026',
 }
