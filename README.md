@@ -43,7 +43,30 @@ Everything currently ships with those flags set to `false`.
 
 ## Deployment
 
-Built as a static site and served from Cloudflare Workers via `wrangler deploy`.
+Built as a static site and served from Cloudflare Workers. Every push to
+`master` runs `.github/workflows/deploy.yml`, which lints, typechecks, builds
+and then deploys. Nothing needs to be run by hand.
+
+The workflow needs two repository secrets (Settings → Secrets and variables →
+Actions):
+
+| Secret | Where it comes from |
+| --- | --- |
+| `CLOUDFLARE_API_TOKEN` | Cloudflare → My Profile → API Tokens, using the **Edit Cloudflare Workers** template |
+| `CLOUDFLARE_ACCOUNT_ID` | The hex id in any Cloudflare dashboard URL, or the account's Workers overview |
+
+To deploy from a laptop instead — the same build, the same config:
+
+```bash
+npm run deploy   # npm run build && wrangler deploy
+```
+
+All Workers configuration lives in `wrangler.jsonc` rather than in the
+dashboard, so it is reviewable and survives a clean checkout. The Worker
+`name` in that file has to match the Worker already serving the domain; point
+it somewhere else and a deploy will quietly create a *second* Worker with no
+custom domain attached, reporting success while the live site keeps serving
+the old build.
 
 - Build command: `npm run build`
 - Output directory: `dist`

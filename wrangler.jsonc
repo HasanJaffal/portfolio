@@ -1,0 +1,29 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+
+  // ⚠️ This must match the Worker that already serves hassanjaffal.com. If it
+  // does not, `wrangler deploy` will not update that Worker — it will create a
+  // second one under this name, with no custom domain attached, and the live
+  // site will keep serving the old build while every deploy reports success.
+  // The name is in the Cloudflare dashboard under Workers & Pages.
+  "name": "portfolio",
+
+  "compatibility_date": "2026-09-04",
+
+  // No "main": this is an assets-only Worker. There is no server-side code,
+  // just the built site, so Cloudflare serves `dist` directly.
+  "assets": {
+    "directory": "./dist",
+
+    // The one setting the whole SPA depends on, and the reason this file is
+    // tracked rather than left in the dashboard. Workers Assets serves
+    // index.html for any path that doesn't match a file on disk, so /projects
+    // resolves on a direct hit or a refresh instead of 404ing.
+    //
+    // Do not replace this with a public/_redirects file. Workers Assets strips
+    // /index and .html when matching, so the usual `/*  /index.html  200` rule
+    // matches its own target and the deploy is rejected outright with
+    // "Infinite loop detected in this rule".
+    "not_found_handling": "single-page-application"
+  }
+}
