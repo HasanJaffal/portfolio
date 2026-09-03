@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, type RefObject } from 'react'
 import { useAnimationFrame } from 'motion/react'
 import { onDogCommand, type DogCommand } from '@/features/dog/dog-bus'
 import { canvas, createPose, type DogPose } from '@/features/dog/model'
-import { readPointer, watchPointer } from '@/features/dog/pointer'
+import { readPointer, takeSwipe, watchPointer } from '@/features/dog/pointer'
 import { createHeadProbe, drawDog, resolvePalette, type HeadProbe } from '@/features/dog/renderer'
 
 /**
@@ -66,6 +66,12 @@ const tuning = {
   snapRadius: 55,
   /** Lingering this close but out of reach is worth walking over for. */
   approachRadius: 240,
+  /** How near her head a flick has to pass before she takes it personally. */
+  swipeRadius: 150,
+  /** A swipe sends her this far after it, per px/s of release speed. */
+  swipeChase: 0.34,
+  /** …up to this much, so a violent flick doesn't fling her across the floor. */
+  swipeChaseMax: 300,
 } as const
 
 type Posture = 'idle' | 'walk' | 'sit' | 'sleep'
@@ -81,6 +87,20 @@ function approach(current: number, target: number, rate: number, dt: number): nu
 
 function between(range: readonly [number, number]): number {
   return range[0] + Math.random() * (range[1] - range[0])
+}
+
+/**
+ * Distance from a point to a line *segment*. A swipe is a path, not a
+ * destination: a finger flicked straight across her ends up well past her, and
+ * measuring only the endpoints would miss the one gesture most obviously aimed
+ * at her.
+ */
+function distanceToSegment(px: number, py: number, ax: number, ay: number, bx: number, by: number) {
+  const abx = bx - ax
+  const aby = by - ay
+  const lengthSq = abx * abx + aby * aby
+  const t = lengthSq === 0 ? 0 : clamp(((px - ax) * abx + (py - ay) * aby) / lengthSq, 0, 1)
+  return Math.hypot(px - (ax + abx * t), py - (ay + aby * t))
 }
 
 interface Mind {
@@ -207,8 +227,6 @@ export interface DogBrainOptions {
   active: boolean
   /** No wandering, no hops, no grabbing, and everything else at a fraction. */
   reduceMotion: boolean
-  /** With no mouse there is nothing to follow, so she looks around by herself. */
-  hasPointer: boolean
   onBark: () => void
 }
 
@@ -223,7 +241,6 @@ export function useDogBrain({
   surface,
   active,
   reduceMotion,
-  hasPointer,
   onBark,
 }: DogBrainOptions): DogBrainControls {
   const mind = useRef<Mind>(createMind())
@@ -312,7 +329,11 @@ export function useDogBrain({
     const pointer = readPointer()
     const headX = rect.left + m.x + m.head.x * canvas.scale
     const headY = rect.bottom - canvas.float - canvas.height + m.head.y * canvas.scale
-    const pointerFresh = hasPointer && pointer.seen && performance.now() - pointer.movedAt < 2400
+    // `seen` already encodes the difference between the two input styles: a
+    // mouse stays live where it stopped, a finger only for as long as it is
+    // down. So this is one test for both, and touch gets the whole repertoire
+    // — the gaze, the rear-up, the swipe at her — rather than taps alone.
+    const pointerFresh = pointer.seen && performance.now() - pointer.movedAt < 2400
     const dx = pointer.x - headX
     const dy = pointer.y - headY
     const dist = Math.hypot(dx, dy) || 1
@@ -373,7 +394,7 @@ export function useDogBrain({
 
     // The headline interaction: a cursor held near her face is something she
     // will stand up and swipe at, not just something she notices.
-    const grabbing = hasPointer && !reduceMotion && !sleeping && pointerFresh
+    const grabbing = !reduceMotion && !sleeping && pointerFresh
     const reachTarget = grabbing
       ? dist < tuning.grabRadius
         ? 1
@@ -415,6 +436,37 @@ export function useDogBrain({
     else if (command === 'fetch') {
       m.excitement = 1
       walkTo(m.x < maxX / 2 ? maxX : 0)
+    }
+
+    /* ---- swipes -------------------------------------------------------- */
+
+    // A flick past her nose is the touchscreen's version of waving something
+    // in a dog's face, so she takes off after it: a bark, a lunge, and a dash
+    // the way it went, scaled by how hard it was thrown. Anything that passed
+    // nowhere near her was aimed at the page, and she ignores it.
+    const swipe = takeSwipe()
+    if (
+      swipe &&
+      distanceToSegment(headX, headY, swipe.originX, swipe.originY, swipe.x, swipe.y) <
+        tuning.swipeRadius
+    ) {
+      m.lastStimulusAt = m.elapsed
+      m.attention = 1
+      m.excitement = 1
+      m.lungeAt = m.elapsed
+      // Rate-limited rather than forced, unlike a poke: the lunge and the dash
+      // are feedback enough on their own, and a run of flicks across her
+      // shouldn't turn into a machine-gun of barks.
+      bark()
+      if (!reduceMotion) {
+        walkTo(
+          m.x + clamp(swipe.vx * tuning.swipeChase, -tuning.swipeChaseMax, tuning.swipeChaseMax),
+        )
+        // She just chased something down; the ambient cursor-chase would only
+        // send her straight back the other way.
+        m.chaseReadyAt = m.elapsed + 5
+        m.approachAt = m.elapsed + 2
+      }
     }
 
     if (!sleeping && m.elapsed - m.lastStimulusAt > tuning.sleepAfter) setPosture('sleep')

@@ -2,7 +2,7 @@ import { useRef } from 'react'
 import { Dog } from '@/features/dog/components/Dog'
 import { canvas } from '@/features/dog/model'
 import { useWorkspace } from '@/layout/workspace-context'
-import { useMediaQuery, usePrefersReducedMotion } from '@/lib/hooks/use-media-query'
+import { usePrefersReducedMotion } from '@/lib/hooks/use-media-query'
 
 /**
  * The dog's place in the workspace: standing on the footer.
@@ -24,10 +24,6 @@ export function DogCompanion() {
   const { isBooting, isTerminalOpen } = useWorkspace()
   const reduceMotion = usePrefersReducedMotion()
 
-  // Coarse pointers have no cursor to follow, so she looks around on her own
-  // and reacts to taps instead. Everything else about her is unchanged.
-  const hasPointer = useMediaQuery('(hover: hover) and (pointer: fine)')
-
   // The terminal slides up out of the same footer she stands on, so while it
   // is open she is either hidden behind it or crowding the prompt. She steps
   // off — faded out and frozen mid-stride rather than unmounted, so she comes
@@ -40,13 +36,7 @@ export function DogCompanion() {
       className="pointer-events-none absolute inset-x-0 bottom-full z-20"
       style={{ height: canvas.height + canvas.float }}
     >
-      <Dog
-        trackRef={trackRef}
-        active={onStage}
-        visible={onStage}
-        reduceMotion={reduceMotion}
-        hasPointer={hasPointer}
-      />
+      <Dog trackRef={trackRef} active={onStage} visible={onStage} reduceMotion={reduceMotion} />
     </div>
   )
 }

@@ -26,10 +26,9 @@ interface DogProps {
   /** False takes her off the stage: faded out, frozen, and out of the tab order. */
   visible: boolean
   reduceMotion: boolean
-  hasPointer: boolean
 }
 
-export function Dog({ trackRef, active, visible, reduceMotion, hasPointer }: DogProps) {
+export function Dog({ trackRef, active, visible, reduceMotion }: DogProps) {
   const { play } = useSound()
 
   // Flipped by the first completed fade, so only the opening beat is delayed.
@@ -44,7 +43,6 @@ export function Dog({ trackRef, active, visible, reduceMotion, hasPointer }: Dog
     surface,
     active,
     reduceMotion,
-    hasPointer,
     onBark: () => play('bark'),
   })
 
@@ -84,13 +82,15 @@ export function Dog({ trackRef, active, visible, reduceMotion, hasPointer }: Dog
       />
 
       {/* Deliberately tighter than the canvas: roughly her body, so the corners
-          of the box stay the page's. */}
+          of the box stay the page's. It is still a 44px-square target, which
+          is the floor for a finger — and it can afford to be, because the
+          strip it sits in is above the footer bar rather than over it. */}
       <button
         type="button"
         onClick={poke}
         title="Say hello"
         aria-label="Say hello to the dog"
-        className="pointer-events-auto absolute bottom-1 left-1/2 h-9 w-10 -translate-x-1/2 cursor-pointer bg-transparent p-0"
+        className="pointer-events-auto absolute bottom-0 left-1/2 h-11 w-11 -translate-x-1/2 cursor-pointer bg-transparent p-0"
       />
     </motion.div>
   )
