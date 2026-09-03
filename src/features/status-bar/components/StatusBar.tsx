@@ -18,11 +18,12 @@ export function StatusBar() {
   const time = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
 
   return (
-    <footer className="hidden h-6 shrink-0 items-center gap-4 border-t border-border bg-panel px-3 font-mono text-[11px] text-muted-dim lg:flex">
+    <footer className="relative z-10 hidden h-6 shrink-0 items-center gap-4 border-t border-border bg-panel px-3 font-mono text-[11px] text-muted-dim lg:flex">
       <span className="flex items-center gap-1.5">
         <GitBranch className="h-3 w-3" /> main
       </span>
       <span className="hidden sm:inline">{path}</span>
+
       <span className="ml-auto hidden items-center gap-1.5 text-lime sm:flex">
         <Check className="h-3 w-3" /> ready
       </span>

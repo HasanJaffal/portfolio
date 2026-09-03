@@ -4,7 +4,9 @@ import { TerminalSquare, X } from 'lucide-react'
 import { useWorkspace } from '@/layout/workspace-context'
 import { useTerminal } from '@/features/terminal/hooks/use-terminal'
 import { TerminalLine } from '@/features/terminal/components/TerminalLine'
+import { useSound } from '@/features/audio'
 import { usePrefersReducedMotion } from '@/lib/hooks/use-media-query'
+import { slideUpPanel, transitions } from '@/lib/motion'
 
 export function Terminal() {
   const { closeTerminal } = useWorkspace()
@@ -12,12 +14,17 @@ export function Terminal() {
   const outputRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
   const reduceMotion = usePrefersReducedMotion()
+  const { play } = useSound()
 
   useEffect(() => {
     outputRef.current?.scrollTo({ top: outputRef.current.scrollHeight })
   }, [entries])
 
   function handleKeyDown(e: KeyboardEvent<HTMLInputElement>) {
+    // A key striking the switch. Enter is left out: submitting plays the
+    // accept or reject tone instead, which would otherwise double up.
+    if (e.key !== 'Enter' && !e.metaKey && !e.ctrlKey && !e.altKey) play('keypress')
+
     if (e.key === 'Enter') {
       const value = input
       setInput('')
@@ -40,10 +47,10 @@ export function Terminal() {
 
   return (
     <motion.section
-      initial={reduceMotion ? false : { opacity: 0, y: 12 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={reduceMotion ? undefined : { opacity: 0, y: 12 }}
-      transition={{ duration: 0.16, ease: 'easeOut' }}
+      variants={slideUpPanel}
+      initial={reduceMotion ? false : 'hidden'}
+      animate="show"
+      exit={reduceMotion ? undefined : 'exit'}
       className="flex h-[45vh] max-h-80 flex-col overflow-hidden border-t border-border bg-inset sm:h-65"
       role="region"
       aria-label="Terminal"
@@ -71,10 +78,17 @@ export function Terminal() {
       </div>
 
       {suggestions.length > 0 && (
-        <div className="flex shrink-0 flex-wrap gap-1.5 border-t border-border px-3 py-1.5">
+        <motion.div
+          initial={reduceMotion ? false : { opacity: 0, height: 0 }}
+          animate={{ opacity: 1, height: 'auto' }}
+          transition={transitions.fast}
+          className="flex shrink-0 flex-wrap gap-1.5 overflow-hidden border-t border-border px-3 py-1.5"
+        >
           {suggestions.slice(0, 6).map((name) => (
-            <button
+            <motion.button
               key={name}
+              whileHover={{ y: -1 }}
+              transition={transitions.instant}
               type="button"
               onMouseDown={(e) => {
                 e.preventDefault()
@@ -84,9 +98,9 @@ export function Terminal() {
               className="rounded-sm border border-border-strong px-1.5 py-0.5 font-mono text-[11px] text-muted-dim hover:border-lime/50 hover:text-lime"
             >
               {name}
-            </button>
+            </motion.button>
           ))}
-        </div>
+        </motion.div>
       )}
 
       <div className="flex shrink-0 items-center gap-2 border-t border-border px-3 py-2">

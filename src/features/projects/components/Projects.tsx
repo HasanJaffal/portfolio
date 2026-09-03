@@ -4,6 +4,7 @@ import { motion } from 'motion/react'
 import { projects } from '@/features/projects/data'
 import { PageHeader } from '@/components/ui/page-header'
 import { ProjectCard } from '@/features/projects/components/ProjectCard'
+import { fadeUp } from '@/lib/motion'
 
 export function Projects() {
   const location = useLocation()
@@ -23,9 +24,10 @@ export function Projects() {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 8 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.25 }}
+      variants={fadeUp}
+      initial="hidden"
+      animate="show"
+      exit="exit"
       className="mx-auto max-w-4xl"
     >
       <PageHeader path="~/projects/" title="Projects" />

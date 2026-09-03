@@ -2,6 +2,7 @@ import { useCallback, useMemo, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useLocalStorage } from '@/lib/hooks/use-local-storage'
 import { useWorkspace } from '@/layout/workspace-context'
+import { useSound } from '@/features/audio'
 import { welcomeLines, terminalHistoryStorageKey } from '@/features/terminal/data'
 import { commandNames, runCommand } from '@/features/terminal/commands/registry'
 
@@ -9,6 +10,7 @@ export interface TerminalEntry {
   id: number
   command: string | null
   lines: string[]
+  status: 'ok' | 'error'
 }
 
 let entryId = 0
@@ -18,9 +20,10 @@ export function useTerminal() {
   const navigate = useNavigate()
   const location = useLocation()
   const { replayBoot } = useWorkspace()
+  const { play, muted, toggleMuted } = useSound()
 
   const [entries, setEntries] = useState<TerminalEntry[]>(() => [
-    { id: nextEntryId(), command: null, lines: welcomeLines },
+    { id: nextEntryId(), command: null, lines: welcomeLines, status: 'ok' },
   ])
   const [input, setInput] = useState('')
   const [commandHistory, setCommandHistory] = useLocalStorage<string[]>(terminalHistoryStorageKey, [])
@@ -44,16 +47,23 @@ export function useTerminal() {
         navigate,
         pathname: location.pathname,
         replayBoot,
+        muted,
+        toggleMuted,
       })
 
       if (result.type === 'clear') {
         setEntries([])
+        play('command')
         return
       }
 
-      setEntries((prev) => [...prev, { id: nextEntryId(), command, lines: result.lines }])
+      play(result.status === 'error' ? 'error' : 'command')
+      setEntries((prev) => [
+        ...prev,
+        { id: nextEntryId(), command, lines: result.lines, status: result.status },
+      ])
     },
-    [navigate, location.pathname, replayBoot, setCommandHistory],
+    [navigate, location.pathname, replayBoot, setCommandHistory, play, muted, toggleMuted],
   )
 
   const recall = useCallback(

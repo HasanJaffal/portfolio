@@ -2,13 +2,15 @@ import { motion } from 'motion/react'
 import { skillCategories } from '@/features/skills/data'
 import { PageHeader } from '@/components/ui/page-header'
 import { SkillCategoryCard } from '@/features/skills/components/SkillCategoryCard'
+import { fadeUp } from '@/lib/motion'
 
 export function Skills() {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 8 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.25 }}
+      variants={fadeUp}
+      initial="hidden"
+      animate="show"
+      exit="exit"
       className="mx-auto max-w-3xl"
     >
       <PageHeader path="~/skills.json" title="Skills & tech stack" />

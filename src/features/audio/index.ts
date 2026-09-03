@@ -1,0 +1,5 @@
+export { AudioProvider } from './components/AudioProvider'
+export { SoundToggle } from './components/SoundToggle'
+export { useSound } from './audio-context'
+export { useNavigationSound } from './hooks/use-navigation-sound'
+export type { SoundName } from './data'

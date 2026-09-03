@@ -1,18 +1,28 @@
 import { profile } from '@/features/about/data'
 import { contactLinks, email } from '@/features/contact/data'
 import { resume } from '@/features/resume/data'
+import { dogCommands, isDogCommand, tellDog } from '@/features/dog'
 import { coreCommands, shortcutCommands } from '@/features/terminal/data'
 
 export interface TerminalContext {
   navigate: (path: string) => void
   pathname: string
   replayBoot: () => void
+  toggleMuted: () => void
+  muted: boolean
 }
 
-export type CommandResult = { type: 'lines'; lines: string[] } | { type: 'clear' }
+export type CommandResult =
+  | { type: 'lines'; lines: string[]; status: 'ok' | 'error' }
+  | { type: 'clear' }
 
 function lines(...ls: string[]): CommandResult {
-  return { type: 'lines', lines: ls }
+  return { type: 'lines', lines: ls, status: 'ok' }
+}
+
+/** Same shape, but the terminal renders it red and plays the reject tone. */
+function fail(...ls: string[]): CommandResult {
+  return { type: 'lines', lines: ls, status: 'error' }
 }
 
 function openSection(path: string, label: string, ctx: TerminalContext): CommandResult {
@@ -23,7 +33,7 @@ function openSection(path: string, label: string, ctx: TerminalContext): Command
 function openExternalLink(id: 'github' | 'linkedin'): CommandResult {
   const link = contactLinks.find((entry) => entry.id === id)
   if (!link || link.placeholder) {
-    return lines(`${id} link not set — edit src/features/contact/data.ts`)
+    return fail(`${id} link not set — edit src/features/contact/data.ts`)
   }
   window.open(link.href, '_blank', 'noopener,noreferrer')
   return lines(`Opening ${link.label}...`)
@@ -58,7 +68,7 @@ const commands: Record<string, CommandHandler> = {
   contact: (_args, ctx) => openSection('/contact', '/contact', ctx),
   resume: () => {
     if (!resume.available) {
-      return lines('resume.pdf not found — check back soon.')
+      return fail('resume.pdf not found — check back soon.')
     }
     window.open(resume.url, '_blank', 'noopener,noreferrer')
     return lines('Opening resume.pdf...')
@@ -68,27 +78,67 @@ const commands: Record<string, CommandHandler> = {
   github: () => openExternalLink('github'),
   linkedin: () => openExternalLink('linkedin'),
   email: () => copyEmail(),
-  sudo: () => lines('Nice try. This terminal runs unprivileged.'),
+  sound: (args, ctx) => {
+    const arg = args[0]?.toLowerCase()
+    if (arg !== 'on' && arg !== 'off') {
+      return lines(`sound is ${ctx.muted ? 'off' : 'on'}`, 'usage: sound on|off')
+    }
+    if ((arg === 'off') !== ctx.muted) ctx.toggleMuted()
+    return lines(`sound ${arg}`)
+  },
+  sudo: () => fail('Nice try. This terminal runs unprivileged.'),
   boot: (_args, ctx) => {
     ctx.replayBoot()
     return lines('Replaying boot sequence...')
+  },
+
+  /* ---- undocumented: the dog ------------------------------------------ */
+
+  dog: (args) => {
+    const requested = args[0]?.toLowerCase()
+    if (requested === undefined) {
+      return lines(
+        'a dog lives on this host.',
+        `usage: dog <${dogCommands.join('|')}>`,
+        '',
+        'she also answers to being clicked.',
+      )
+    }
+    if (!isDogCommand(requested)) {
+      return fail(`she tilts her head at '${requested}'`, `she knows: ${dogCommands.join(', ')}`)
+    }
+    tellDog(requested)
+    const said: Record<typeof requested, string> = {
+      come: 'here, girl...',
+      sit: 'good girl.',
+      stay: 'staying.',
+      speak: 'woof.',
+      fetch: 'off she goes.',
+      sleep: 'shhh.',
+    }
+    return lines(said[requested])
+  },
+  // The classic. She takes it personally.
+  cat: (args) => {
+    if (args.length === 0) {
+      tellDog('speak')
+      return lines('cat: missing operand', '(the dog objects to the request regardless)')
+    }
+    return fail(`cat: ${args[0]}: No such file or directory`)
   },
 }
 
 export async function runCommand(input: string, ctx: TerminalContext): Promise<CommandResult> {
   const trimmed = input.trim()
-  if (trimmed === '') return { type: 'lines', lines: [] }
+  if (trimmed === '') return { type: 'lines', lines: [], status: 'ok' }
   const [name, ...args] = trimmed.split(/\s+/)
   const key = name.toLowerCase()
   if (key === 'clear') return { type: 'clear' }
   const handler = commands[key]
   if (!handler) {
-    return lines(`command not found: ${name}`, "type 'help' for a list of commands")
+    return fail(`command not found: ${name}`, "type 'help' for a list of commands")
   }
   return handler(args, ctx)
 }
 
-export const commandNames: string[] = [
-  ...Object.keys(commands),
-  'clear',
-]
+export const commandNames: string[] = [...Object.keys(commands), 'clear']
