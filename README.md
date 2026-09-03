@@ -43,13 +43,20 @@ Everything currently ships with those flags set to `false`.
 
 ## Deployment
 
-Built as a static site and served from Cloudflare Pages.
+Built as a static site and served from Cloudflare Workers via `wrangler deploy`.
 
 - Build command: `npm run build`
 - Output directory: `dist`
 
-`public/_redirects` sends every path to `index.html` with a 200 so client-side
-routes survive a direct hit or a refresh. Without it, `/projects` would 404.
+Client-side routing is handled by the Workers Assets setting
+`not_found_handling: "single-page-application"`, which serves `index.html` for
+any path that does not match a file. Without it, `/projects` would 404 on a
+direct hit or a refresh.
+
+Do not add a `public/_redirects` file for this. Workers Assets strips `/index`
+and `.html` when matching, so the usual `/*  /index.html  200` SPA rule matches
+its own target and the deploy is rejected with "Infinite loop detected in this
+rule". The `not_found_handling` setting already covers that case.
 
 `index.html` carries the canonical URL and the Open Graph and Twitter tags.
 `public/og.png` is the 1200x630 share card, and `public/sitemap.xml` and
