@@ -25,11 +25,21 @@ export function AudioProvider({ children }: { children: ReactNode }) {
     // `pointerdown`/`keydown` both count as activation gestures. We keep
     // listening (rather than `once`) so a context suspended later — by a
     // backgrounded tab, say — is resumed on the next interaction.
-    window.addEventListener('pointerdown', unlock, { passive: true })
-    window.addEventListener('keydown', unlock)
+    //
+    // Capture phase, so the engine is awake before the handler that wants a
+    // sound out of it. A bubbling listener on `window` is the *last* thing a
+    // keydown reaches, which meant the terminal's own key handler asked for a
+    // keypress blip while there was still no context to play it on, and the
+    // first character typed in a session was always silent.
+    //
+    // `click` is in there as a backstop rather than a duplicate: an activation
+    // that arrives without a pointerdown — assistive technology, or anything
+    // synthesising the event — would otherwise never wake the engine at all.
+    const options = { capture: true, passive: true } as const
+    const events = ['pointerdown', 'keydown', 'click'] as const
+    for (const type of events) window.addEventListener(type, unlock, options)
     return () => {
-      window.removeEventListener('pointerdown', unlock)
-      window.removeEventListener('keydown', unlock)
+      for (const type of events) window.removeEventListener(type, unlock, options)
       engine.dispose()
     }
   }, [engine])
