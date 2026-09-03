@@ -4,7 +4,7 @@ export interface CommandHelp {
 }
 
 export const welcomeLines: string[] = [
-  'Welcome to hasan@portfolio.',
+  'Welcome to hassan@portfolio.',
   "Type 'help' to see available commands, or use the explorer on the left.",
 ]
 

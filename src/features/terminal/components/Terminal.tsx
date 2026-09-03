@@ -104,7 +104,7 @@ export function Terminal() {
       )}
 
       <div className="flex shrink-0 items-center gap-2 border-t border-border px-3 py-2">
-        <span className="shrink-0 font-mono text-[13px] text-lime">hasan@portfolio:~$</span>
+        <span className="shrink-0 font-mono text-[13px] text-lime">hassan@portfolio:~$</span>
         <input
           ref={inputRef}
           value={input}

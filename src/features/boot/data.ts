@@ -26,7 +26,7 @@ export interface BootLine {
 }
 
 export const bootLines: BootLine[] = [
-  { stamp: '0.000000', label: 'hasan-os kernel 6.1.4 (tty0)', result: '', tone: 'banner', delayMs: 90 },
+  { stamp: '0.000000', label: 'hassan-os kernel 6.1.4 (tty0)', result: '', tone: 'banner', delayMs: 90 },
   { stamp: '0.041231', label: 'mounting /dev/portfolio', result: 'ok', tone: 'ok', delayMs: 150 },
   { stamp: '0.118904', label: 'probing render device', result: 'webgl2', tone: 'accent', delayMs: 120 },
   { stamp: '0.240117', label: 'loading profile', result: 'ok', tone: 'ok', delayMs: 170 },

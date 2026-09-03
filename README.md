@@ -1,6 +1,6 @@
 # hassanjaffal.com
 
-Personal portfolio for Hasan Jaffal, software engineer. A terminal-inspired
+Personal portfolio for Hassan Jaffal, software engineer. A terminal-inspired
 workspace: an explorer sidebar, a working command palette, a real command
 shell, a WebGL background, and a boot sequence on first visit.
 

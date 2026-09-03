@@ -41,7 +41,7 @@ export function TitleBar() {
           ))}
         </div>
 
-        <p className="hidden font-mono text-xs text-muted sm:block">hasan@portfolio</p>
+        <p className="hidden font-mono text-xs text-muted sm:block">hassan@portfolio</p>
       </div>
 
       <div className="flex justify-center">

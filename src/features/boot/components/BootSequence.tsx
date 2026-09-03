@@ -149,7 +149,7 @@ export function BootSequence({
             transition={transitions.fast}
             className="mt-4 text-[13px] text-foreground text-glow"
           >
-            hasan@portfolio:~$ <span className="animate-caret-blink">▍</span>
+            hassan@portfolio:~$ <span className="animate-caret-blink">▍</span>
           </motion.p>
         ) : (
           <p className="mt-4 text-[13px] text-lime" aria-hidden="true">

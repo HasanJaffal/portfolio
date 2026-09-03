@@ -13,7 +13,7 @@ export function TerminalLine({ entry }: { entry: TerminalEntry }) {
     >
       {entry.command !== null && (
         <div className="flex gap-2">
-          <span className="shrink-0 text-lime">hasan@portfolio:~$</span>
+          <span className="shrink-0 text-lime">hassan@portfolio:~$</span>
           <span className="break-all text-foreground">{entry.command}</span>
         </div>
       )}

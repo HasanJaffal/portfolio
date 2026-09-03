@@ -11,7 +11,7 @@ export interface Profile {
 }
 
 export const profile: Profile = {
-  name: 'Hasan Jaffal',
+  name: 'Hassan Jaffal',
   role: 'Software Engineer',
   tagline:
     'Full-stack engineer. I build data pipelines, geospatial systems and the services that hold them together.',
