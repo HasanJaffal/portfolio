@@ -1,78 +1,57 @@
-# React + TypeScript + Vite
+# hassanjaffal.com
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Personal portfolio for Hasan Jaffal, software engineer. A terminal-inspired
+workspace: an explorer sidebar, a working command palette, a real command
+shell, a WebGL background, and a boot sequence on first visit.
 
-Currently, two official plugins are available:
+Live at [hassanjaffal.com](https://hassanjaffal.com).
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Stack
 
-## React Compiler
+React 19, TypeScript, Vite, Tailwind CSS v4, React Router, Motion, Three.js
+via React Three Fiber, and Base UI primitives. The React Compiler is enabled.
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+## Running it
 
-Note: This will impact Vite dev & build performances.
-You can also try [the experimental native React Compiler support in plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md#rust-react-compiler) by using `compiler: true` in the plugin options instead of using the Babel plugin.
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
+```bash
+npm install
+npm run dev      # dev server
+npm run build    # typecheck + production build to dist/
+npm run preview  # serve the built output
+npm run lint
 ```
 
-You can also install [eslint-plugin-react-x](https://npmx.dev/package/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://npmx.dev/package/eslint-plugin-react-dom) for React-specific lint rules:
+## Where the content lives
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+All copy is data, not markup. Each feature owns a `data.ts` and both the page
+and the terminal read from it, so editing one file updates every surface.
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+| File | Holds |
+| --- | --- |
+| `src/features/about/data.ts` | Name, role, tagline, location, status, bio |
+| `src/features/experience/data.ts` | Work history |
+| `src/features/projects/data.ts` | Projects, also feeds the `projects` command |
+| `src/features/skills/data.ts` | Skill categories, `core` drives the home page badges |
+| `src/features/contact/data.ts` | Email, GitHub, LinkedIn |
+| `src/features/resume/data.ts` | Resume availability and `public/resume.pdf` |
+| `src/features/terminal/data.ts` | Terminal welcome text and command help |
+| `src/features/boot/data.ts` | Boot sequence lines and timings |
 
-```
+Entries carrying a `placeholder` (or `*IsPlaceholder`) flag render a visible
+`// TODO` marker in the UI, so unfinished content is never mistaken for fact.
+Everything currently ships with those flags set to `false`.
+
+## Deployment
+
+Built as a static site and served from Cloudflare Pages.
+
+- Build command: `npm run build`
+- Output directory: `dist`
+
+`public/_redirects` sends every path to `index.html` with a 200 so client-side
+routes survive a direct hit or a refresh. Without it, `/projects` would 404.
+
+`index.html` carries the canonical URL and the Open Graph and Twitter tags.
+`public/og.png` is the 1200x630 share card, and `public/sitemap.xml` and
+`public/robots.txt` point at the same domain. All four hardcode
+`https://hassanjaffal.com`, so update them together if the domain changes.
