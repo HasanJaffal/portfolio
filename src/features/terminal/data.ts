@@ -13,7 +13,9 @@ export const coreCommands: CommandHelp[] = [
   { name: 'whoami', description: 'print identity' },
   { name: 'about', description: 'open ~/about' },
   { name: 'experience', description: 'open ~/experience' },
+  { name: 'education', description: 'open ~/education' },
   { name: 'projects', description: 'open ~/projects' },
+  { name: 'services', description: 'open ~/services' },
   { name: 'skills', description: 'open ~/skills' },
   { name: 'contact', description: 'open ~/contact' },
   { name: 'resume', description: 'open resume.pdf' },
@@ -26,7 +28,9 @@ export const coreCommands: CommandHelp[] = [
 export const shortcutCommands: CommandHelp[] = [
   { name: 'github', description: 'open GitHub profile' },
   { name: 'linkedin', description: 'open LinkedIn profile' },
+  { name: 'whatsapp', description: 'open a WhatsApp chat' },
   { name: 'email', description: 'copy email to clipboard' },
+  { name: 'phone', description: 'copy phone number to clipboard' },
 ]
 
 export const terminalHistoryStorageKey = 'portfolio:terminal-history'

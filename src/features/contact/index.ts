@@ -1,3 +1,3 @@
 export { Contact } from './components/Contact'
-export { contactLinks, email } from './data'
-export type { ContactLink } from './data'
+export { contactLinks, email, phone, whatsappGreeting, whatsappUrl } from './data'
+export type { ContactIcon, ContactLink } from './data'

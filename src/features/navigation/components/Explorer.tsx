@@ -1,21 +1,18 @@
 import { NavLink } from 'react-router-dom'
 import { motion } from 'motion/react'
-import { Terminal, User, Briefcase, FolderGit2, Cpu, Mail, Download, Command } from 'lucide-react'
-import { navItems, type NavIcon } from '@/features/navigation/data'
+import { Download, Command } from 'lucide-react'
+import { navItems } from '@/features/navigation/data'
+import { navIcons } from '@/features/navigation/nav-icons'
 import { resume } from '@/features/resume/data'
 import { useWorkspace } from '@/layout/workspace-context'
 import { cn } from '@/lib/utils'
 import { easeOut } from '@/lib/motion'
 
-const iconMap: Record<NavIcon, typeof Terminal> = {
-  terminal: Terminal,
-  user: User,
-  briefcase: Briefcase,
-  'folder-git': FolderGit2,
-  cpu: Cpu,
-  mail: Mail,
-}
-
+/**
+ * The section list. Fixed to the left on a desktop layout, and lifted whole
+ * into the mobile sheet — `onNavigate` is how that sheet learns to close, so
+ * every row that takes you somewhere has to call it.
+ */
 export function Explorer({ onNavigate }: { onNavigate?: () => void }) {
   const { setPaletteOpen } = useWorkspace()
 
@@ -29,7 +26,7 @@ export function Explorer({ onNavigate }: { onNavigate?: () => void }) {
 
       <nav aria-label="Sections" className="flex-1 space-y-0.5 px-2">
         {navItems.map((item) => {
-          const Icon = iconMap[item.icon]
+          const Icon = navIcons[item.icon]
           return (
             <NavLink
               key={item.id}
@@ -71,6 +68,7 @@ export function Explorer({ onNavigate }: { onNavigate?: () => void }) {
           href={resume.available ? resume.url : undefined}
           target="_blank"
           rel="noopener noreferrer"
+          onClick={onNavigate}
           aria-disabled={!resume.available}
           title={resume.available ? 'Open resume.pdf' : resume.updatedLabel}
           className={cn(
@@ -84,7 +82,10 @@ export function Explorer({ onNavigate }: { onNavigate?: () => void }) {
         </a>
         <button
           type="button"
-          onClick={() => setPaletteOpen(true)}
+          onClick={() => {
+            onNavigate?.()
+            setPaletteOpen(true)
+          }}
           className="flex w-full items-center gap-2.5 rounded-md px-2.5 py-2 text-left text-sm text-muted-dim transition-colors duration-100 hover:bg-panel-hover hover:text-foreground"
         >
           <Command className="h-4 w-4 shrink-0" aria-hidden="true" />

@@ -11,7 +11,9 @@ import { CommandPalette } from '@/features/command-palette'
 import { Home } from '@/features/home'
 import { About } from '@/features/about'
 import { Experience } from '@/features/experience'
+import { Education } from '@/features/education'
 import { Projects } from '@/features/projects'
+import { Services } from '@/features/services'
 import { Skills } from '@/features/skills'
 import { Contact } from '@/features/contact'
 import { DogCompanion } from '@/features/dog'
@@ -58,7 +60,9 @@ export function Workspace() {
                 <Route path="/" element={<Home />} />
                 <Route path="/about" element={<About />} />
                 <Route path="/experience" element={<Experience />} />
+                <Route path="/education" element={<Education />} />
                 <Route path="/projects" element={<Projects />} />
+                <Route path="/services" element={<Services />} />
                 <Route path="/skills" element={<Skills />} />
                 <Route path="/contact" element={<Contact />} />
                 <Route path="*" element={<NotFound />} />

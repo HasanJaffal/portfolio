@@ -30,10 +30,13 @@ and the terminal read from it, so editing one file updates every surface.
 | --- | --- |
 | `src/features/about/data.ts` | Name, role, tagline, location, status, bio |
 | `src/features/experience/data.ts` | Work history |
+| `src/features/education/data.ts` | Degrees, transcribed from `public/resume.pdf` |
 | `src/features/projects/data.ts` | Projects, also feeds the `projects` command |
+| `src/features/services/data.ts` | Freelance services and the WhatsApp message each one opens with |
 | `src/features/skills/data.ts` | Skill categories, `core` drives the home page badges |
-| `src/features/contact/data.ts` | Email, GitHub, LinkedIn |
+| `src/features/contact/data.ts` | Email, phone, WhatsApp, GitHub, LinkedIn |
 | `src/features/resume/data.ts` | Resume availability and `public/resume.pdf` |
+| `src/features/navigation/data.ts` | Sections and routes; `primary` picks the four in the mobile bar |
 | `src/features/terminal/data.ts` | Terminal welcome text and command help |
 | `src/features/boot/data.ts` | Boot sequence lines and timings |
 

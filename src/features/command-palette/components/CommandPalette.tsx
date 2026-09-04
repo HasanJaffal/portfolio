@@ -6,9 +6,12 @@ import {
   Terminal as TerminalIcon,
   User,
   Briefcase,
+  GraduationCap,
   FolderGit2,
+  Wrench,
   Cpu,
   Mail,
+  Phone,
   Download,
   GitBranch,
   Link2,
@@ -20,16 +23,28 @@ import {
 } from 'lucide-react'
 import { useWorkspace } from '@/layout/workspace-context'
 import { useSound } from '@/features/audio'
-import { navigatePaletteItems, projectPaletteItems, actionPaletteItems, type PaletteItem, type PaletteIcon } from '@/features/command-palette/data'
+import {
+  navigatePaletteItems,
+  projectPaletteItems,
+  servicePaletteItems,
+  actionPaletteItems,
+  type PaletteItem,
+  type PaletteIcon,
+} from '@/features/command-palette/data'
 import { Kbd } from '@/components/ui/kbd'
+import { WhatsAppIcon, type IconComponent } from '@/components/ui/icons'
 
-const iconMap: Record<PaletteIcon, typeof TerminalIcon> = {
+const iconMap: Record<PaletteIcon, IconComponent> = {
   terminal: TerminalIcon,
   user: User,
   briefcase: Briefcase,
+  'graduation-cap': GraduationCap,
   'folder-git': FolderGit2,
+  wrench: Wrench,
   cpu: Cpu,
   mail: Mail,
+  phone: Phone,
+  whatsapp: WhatsAppIcon,
   download: Download,
   github: GitBranch,
   linkedin: Link2,
@@ -40,6 +55,7 @@ const iconMap: Record<PaletteIcon, typeof TerminalIcon> = {
 
 const groups: { id: PaletteItem['group']; label: string; items: PaletteItem[] }[] = [
   { id: 'navigate', label: 'Navigate', items: navigatePaletteItems },
+  { id: 'services', label: 'Services', items: servicePaletteItems },
   { id: 'projects', label: 'Projects', items: projectPaletteItems },
   { id: 'actions', label: 'Actions', items: actionPaletteItems },
 ]
