@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { motion } from 'motion/react'
-import { ArrowRight, Download, Mail } from 'lucide-react'
+import { ArrowRight, Download, Mail, Wrench } from 'lucide-react'
 import { profile } from '@/features/about/data'
 import { skillCategories } from '@/features/skills/data'
 import { resume } from '@/features/resume/data'
@@ -52,6 +52,9 @@ export function Home() {
       <motion.div variants={fadeUp} className="mt-8 flex flex-wrap items-center gap-3">
         <Button variant="primary" render={<Link to="/projects" />}>
           View projects <ArrowRight className="h-4 w-4" />
+        </Button>
+        <Button variant="outline" render={<Link to="/services" />}>
+          <Wrench className="h-4 w-4" /> View services
         </Button>
         <Button variant="outline" render={<Link to="/contact" />}>
           <Mail className="h-4 w-4" /> Contact
